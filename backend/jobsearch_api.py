@@ -36,10 +36,11 @@ def example_search_loop_through_hits(query):
     for hit in hits:
         print(f"{hit['webpage_url']}, {hit['employer']['name']}, {hit['description']['text_formatted']}")
         #print(hit.keys())
-        
+        #print(f"{hit['occupation_field']['label']}")
+
 
 
 if __name__ == '__main__':
-    query = 'lärare uppsala'
+    query = 'it'
     example_search_loop_through_hits(query)
     example_search_return_number_of_hits(query)
