@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from . import models
+
+@admin.register(models.PersonalLetter)
+class CarAdmin(admin.ModelAdmin):
+    list_display = ['_input', "_output"]

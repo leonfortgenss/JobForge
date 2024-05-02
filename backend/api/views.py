@@ -6,12 +6,15 @@ from rest_framework.authentication import TokenAuthentication
 
 from api.serializers import PersonalLetterCreatorSerializer, TokenSerializer, UserSerializer
 from api.models import PersonalLetter
+from rest_framework.permissions import AllowAny
 
 # Vad man ska få från varje endpoint
 
 class LetterCreatorView(views.APIView):
     serializer_class = PersonalLetterCreatorSerializer
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = []
+    permission_classes = [AllowAny]
+    # TokenAuthentication
 
     # Om man gör en get requst
 
