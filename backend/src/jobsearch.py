@@ -16,7 +16,7 @@ def _get_ads(params):
     headers = {'accept': 'application/json'}
     response = requests.get(url_for_search, headers=headers, params=params)
     response.raise_for_status()  # check for http errors
-    return json.loads(response.content.decode('utf8'))
+    return json.loads(response.content.decode('utf-8'))
 
 
 def search_return_number_of_hits(query):

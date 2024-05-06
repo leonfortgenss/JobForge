@@ -7,7 +7,7 @@ from langchain_community.document_loaders import DirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import OllamaEmbeddings
 import os
-#from dotenv import load_dotenv
+from dotenv import load_dotenv
 from langchain.schema import Document
 from langchain.vectorstores.chroma import Chroma
 import shutil
@@ -23,7 +23,7 @@ df = pd.read_csv('jobs.csv')
 
 print(df['description'])
 
-#load_dotenv(override=True, verbose=True)
+load_dotenv(override=True, verbose=True)
 
 
 CHROMA_PATH = os.environ.get('CHROMA_PATH', '')
@@ -31,11 +31,22 @@ DATA_PATH = os.environ.get('DATA_PATH', '')
 
 embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
 
-#loads and converts documents to markdown
+#loads markdown documents
 def load_documents():
     loader = DirectoryLoader(DATA_PATH, glob="*.md")
     docs = loader.load()
     return docs
+
+# print(CHROMA_PATH, DATA_PATH)
+
+# Example check
+# documents = load_documents()  # However you fetch or define documents
+# if not documents:
+#     raise ValueError("No documents retrieved. Cannot proceed with empty document list.")
+
+# print("Attempting to fetch documents...")
+# documents = load_documents()  # Your function to fetch documents
+# print(f"Documents fetched: {len(documents)}")
 
 #split text from documents to chunks 
 def split_text(docs: list[Document]):
