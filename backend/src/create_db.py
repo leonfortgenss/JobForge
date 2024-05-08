@@ -31,22 +31,11 @@ DATA_PATH = os.environ.get('DATA_PATH', '')
 
 embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
 
-#loads markdown documents
+#loads markdown documents from data
 def load_documents():
     loader = DirectoryLoader(DATA_PATH, glob="*.md")
     docs = loader.load()
     return docs
-
-# print(CHROMA_PATH, DATA_PATH)
-
-# Example check
-# documents = load_documents()  # However you fetch or define documents
-# if not documents:
-#     raise ValueError("No documents retrieved. Cannot proceed with empty document list.")
-
-# print("Attempting to fetch documents...")
-# documents = load_documents()  # Your function to fetch documents
-# print(f"Documents fetched: {len(documents)}")
 
 #split text from documents to chunks 
 def split_text(docs: list[Document]):
@@ -71,7 +60,6 @@ def save_to_chroma(chunks: list[Document], embeddings):
     db = Chroma.from_documents(
         chunks, embeddings, persist_directory=CHROMA_PATH
     )
-    db.persist()
     print(f"Saved {len(chunks)} chunks to {CHROMA_PATH}.")
 
 

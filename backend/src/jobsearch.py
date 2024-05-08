@@ -1,6 +1,7 @@
 import requests
 import json
 import pandas as pd
+from requests.exceptions import HTTPError
 
 """
 Install python packages:
@@ -42,6 +43,9 @@ def search_loop_through_hits(query, num):
             search_params = {'q': query, 'limit': limit, 'offset':offset}
             json_response = _get_ads(search_params)
             hits = json_response['hits']
+            if not hits:  # Check if no hits are returned
+                print(f"No more data returned at offset {offset}.")
+                break
             for hit in hits:
                 job_dict = {
                         'name': hit['headline'],
@@ -58,6 +62,12 @@ def search_loop_through_hits(query, num):
                 
 
             offset += limit
+        except HTTPError as e:
+            print(f"HTTP error at offset {offset}: {e.response.status_code} - {e.response.text}")
+            break
+        except Exception as e:
+            print(f"Unexpected error at offset {offset}: {str(e)}")
+            break
         except:
             offset += limit
         print(offset, num)

@@ -17,6 +17,8 @@ def sanitize_filename(filename):
         filename = filename.replace(char, '_')
     return filename
 count = 0
+deletecount = 0
+errorcount = 0 
 for i in range(len(texts)):
 
     # create a beautiful soup object
@@ -35,9 +37,10 @@ for i in range(len(texts)):
     print(markdown_text)
     
     
-    filename = data_folder+df['name'][i] + '.md'
+    filename = df['name'][i] + '.md'
 
-    clean_filename = sanitize_filename(filename)
+    clean_filename = data_folder+sanitize_filename(filename)
+    
 
     clean_text = unicodedata.normalize('NFKD', markdown_text).encode('ascii', 'ignore').decode('utf8')
 
@@ -46,11 +49,15 @@ for i in range(len(texts)):
             f.write(clean_text)
     except Exception as e:  # Catch and handle any exception
         print(f"An error occurred: {e}")  # Optional: Print or log the error
+        errorcount += 1
         try:
             os.remove(filename)  # Attempt to delete the file
             print(f"File {filename} deleted due to error.")  # Confirmation message
+            deletecount += 1
         except Exception as e:
             count += 1
             print(f"Failed to delete file {filename}: {e}")  # Error handling for file deletion
 
-print(count)
+print(errorcount, "errors were found")
+print(deletecount, "files were deleted")
+print(count, "files could not be deleted")
