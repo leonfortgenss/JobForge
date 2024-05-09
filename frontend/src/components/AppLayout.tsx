@@ -1,36 +1,178 @@
+"use client"
 
-// import Nav from "../_components/Nav";
-// import Footer from "../_components/Footer";
+import * as React from "react"
 
+import { cn } from "@/lib/utils"
+// import { Icons } from "@/components/icons"
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu"
+
+const components: { title: string; href: string; description: string }[] = [
+  {
+    title: "Alert Dialog",
+    href: "/docs/primitives/alert-dialog",
+    description:
+      "A modal dialog that interrupts the user with important content and expects a response.",
+  },
+  {
+    title: "Hover Card",
+    href: "/docs/primitives/hover-card",
+    description:
+      "For sighted users to preview content available behind a link.",
+  },
+  {
+    title: "Progress",
+    href: "/docs/primitives/progress",
+    description:
+      "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
+  },
+  {
+    title: "Scroll-area",
+    href: "/docs/primitives/scroll-area",
+    description: "Visually or semantically separates content.",
+  },
+  {
+    title: "Tabs",
+    href: "/docs/primitives/tabs",
+    description:
+      "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
+  },
+  {
+    title: "Tooltip",
+    href: "/docs/primitives/tooltip",
+    description:
+      "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
+  },
+]
+
+function Navigation() {
+  return (
+    <NavigationMenu className="p-4 shadow-xl w-full max-w-full">
+      <NavigationMenuList>
+        <NavigationMenuItem>
+          <NavigationMenuTrigger>Starta här</NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
+              <li className="row-span-3">
+                <NavigationMenuLink asChild>
+                  <a
+                    className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
+                    href="/"
+                  >
+                    {/* <Icons.logo className="h-6 w-6" /> */}
+                    <div className="mb-2 mt-4 text-lg font-medium">
+                      JobForge
+                    </div>
+                    <p className="text-sm leading-tight text-muted-foreground">
+                      Underlättar dina jobbansökningar
+                    </p>
+                  </a>
+                </NavigationMenuLink>
+              </li>
+              <ListItem href="/docs" title="Smart AI">
+                Specialiserad AI på just jobbannonser.
+              </ListItem>
+              <ListItem href="/docs/installation" title="Relevant data">
+                Baserad på historisk data.
+              </ListItem>
+              <ListItem href="/docs/primitives/typography" title="Effektiv">
+                Snabb och smidigt
+              </ListItem>
+            </ul>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuTrigger>Om oss</NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+              {components.map((component) => (
+                <ListItem
+                  key={component.title}
+                  title={component.title}
+                  href={component.href}
+                >
+                  {component.description}
+                </ListItem>
+              ))}
+            </ul>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <a href="/docs" >
+            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              Dokumentation
+            </NavigationMenuLink>
+          </a>
+        </NavigationMenuItem>
+      </NavigationMenuList>
+    </NavigationMenu>
+  )
+}
+
+const ListItem = React.forwardRef<
+  React.ElementRef<"a">,
+  React.ComponentPropsWithoutRef<"a">
+>(({ className, title, children, ...props }, ref) => {
+  return (
+    <li>
+      <NavigationMenuLink asChild>
+        <a
+          ref={ref}
+          className={cn(
+            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            className
+          )}
+          {...props}
+        >
+          <div className="text-sm font-medium leading-none">{title}</div>
+          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+            {children}
+          </p>
+        </a>
+      </NavigationMenuLink>
+    </li>
+  )
+})
+ListItem.displayName = "ListItem"
 
 export default function AppLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-
-  return (
-    <>
-        <nav className="flex flex-col min-h-screen w-full">
-            {/* <Nav /> */}
-            <ul>
-                <li>Home</li>
-                <li>Personal Letter</li>
-                <li>Historical Data</li>
-            </ul>
-        </nav>
-        <main>
-            {children}
-        </main>
-        <footer className="mt-auto">
-            {/* <Footer /> */}
-            <ul>
-                <li>Home</li>
-                <li>Personal Letter</li>
-                <li>Historical Data</li>
-                <li>Contact</li>
-            </ul>
+	children,
+  }: {
+	children: React.ReactNode
+  }) {
+	return (
+	  <>
+		<nav className="w-full">
+		  <Navigation />
+		</nav>
+		<main>
+		  {children}
+		</main>
+		<footer className="mt-auto bottom-0 hidden md:flex flex-col w-full border-t-2 border-foreground/10 m">
+            <div className="flex justify-between p-6">
+                <p className="text-lg">JobForge &copy;</p>
+                <p className="text-lg">Förenklar ditt personliga brev</p>
+            </div>
+           <div>
+                <ul className="flex justify-between px-6 pb-5">
+                    <li className="hover:text-foreground/60">
+                        <a href="/app/course">Start</a>
+                    </li>
+                    <li className="hover:text-foreground/60">Dokumentation</li>
+                    <li className="hover:text-foreground/60">Varför JobForge?</li>
+                    <li className="hover:text-foreground/60">
+                        <a href="/app/review">Om oss</a>
+                    </li>
+                </ul>
+           </div>
         </footer>
-    </>
-  );
-}
+	  </>
+	);
+  }
