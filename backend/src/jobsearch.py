@@ -34,7 +34,7 @@ def search_loop_through_hits(query, num):
     # If there are more (which you find with ['total']['value'] in the json response)
     # you have to use offset and multiple requests to get all ads.
 
-    df = pd.DataFrame(columns=['name', 'employer', 'url', 'experience', 'description', 'must_have', 'nice_to_have'])
+    df = pd.DataFrame(columns=['name', 'employer', 'url', 'description', 'workplace_address'])
 
     offset = 0
     limit = 100
@@ -51,10 +51,11 @@ def search_loop_through_hits(query, num):
                         'name': hit['headline'],
                         'employer': hit['employer']['name'],
                         'url': hit['webpage_url'],
-                        'experience': hit['experience_required'],
                         'description':hit['description']['text_formatted'],
-                        'must_have':hit['must_have'],
-                        'nice_to_have':hit['nice_to_have']
+                        'workplace_address':hit['workplace_address']['region']
+                        # 'experience': hit['experience_required'],
+                        # 'must_have':hit['must_have'],
+                        # 'nice_to_have':hit['nice_to_have']
                     }
                 new_df = pd.DataFrame([job_dict])  # Create a new DataFrame from the dictionary
                 df = pd.concat([df, new_df], ignore_index=True)  # Concatenate with the existing DataFrame

@@ -4,3 +4,8 @@ venv/
 db.sqlite3
 data/
 chroma/
+jobs.csv
+skills.csv
+jobs2.csv
+2023_beta1_jsonl.zip
+2023.sample.jsonl
