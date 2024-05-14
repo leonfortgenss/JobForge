@@ -10,17 +10,22 @@ from rest_framework.authtoken.models import Token
 class PersonalLetterCreatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = PersonalLetter
-        fields = ("id", "_input", "_output")
+        fields = ("id", "name", "age", "traits", "output")
         extra_kwargs = {
-            "_output": {"read_only":True}
+            "output": {"read_only":True}
         }
 
 # Gjorde om standard create functionen så den passar oss och här skickar den in datan till OpenAIs API och sedan sparar det.
 
     def create(self, validated_data):
         pl = PersonalLetter(**validated_data)
-        _output = send_prompt_to_api(validated_data["_input"])
-        pl._output = _output
+
+        name = validated_data.get('name')
+        age = validated_data.get('age')
+        traits = validated_data.get('traits')
+
+        output = send_prompt_to_api(name, age, traits)
+        pl.output = output
         pl.save()
         return pl
     
