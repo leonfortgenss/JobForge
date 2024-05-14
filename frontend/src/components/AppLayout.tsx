@@ -84,7 +84,7 @@ function Navigation() {
               </ListItem>
               <ListItem href="/docs/primitives/typography" title="Effektiv">
                 Snabb och smidigt
-              </ListItem>
+              </ListItem> 
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
