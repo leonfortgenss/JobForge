@@ -145,37 +145,36 @@ ListItem.displayName = "ListItem"
 
 export default function AppLayout({
 	children,
-  }: {
+}: {
 	children: React.ReactNode
-  }) {
+}) {
 	return (
-	  <div className="flex flex-col min-h-screen bg-gray-700 ">
-      <nav className="flex w-full items-center">
-        <img src={logo} alt="" className="w-16 h-10 ml-2" />
-		    <Navigation />
-		</nav>
-		<main>
-		  {children}
-		</main>
-		<footer className="mt-auto bottom-0 hidden md:flex flex-col w-full bg-gray-700 border-t-2 border-foreground/10 ">
-            <div className="flex justify-between p-6">
-                <p className="text-lg text-white">JobForge &copy;</p>
-                <p className="text-lg text-white">Förenklar ditt personliga brev</p>
-            </div>
-           <div>
-                <ul className="flex justify-between px-6 pb-5">
-                    <li className="hover:text-gray-400 text-white">
-                        <a href="/app/course text-white">Start</a>
-                    </li>
-                    <li className="hover:text-gray-400 text-white">Dokumentation</li>
-                    <li className="hover:text-gray-400 text-white">Varför JobForge?</li>
-                    <li className="hover:text-gray-400 text-white">
-                        <a href="/app/review">Om oss</a>
-                    </li>
-                </ul>
-           </div> 
-        </footer>
-    </div>
-
+		<div className="flex flex-col min-h-screen">
+			<nav className="flex w-full items-center bg-gray-700">
+				<img src={logo} alt="JobForge Logo" className="w-16 h-10 ml-2" />
+				<Navigation />
+			</nav>
+			<main className="flex-grow bg-gray-600 w-full">
+				{children}
+			</main>
+			<footer className="mt-auto w-full bg-gray-700 border-t-2 border-foreground/10">
+				<div className="flex justify-between p-6">
+					<p className="text-lg text-white">JobForge &copy;</p>
+					<p className="text-lg text-white">Förenklar ditt personliga brev</p>
+				</div>
+				<div>
+					<ul className="flex justify-between px-6 pb-5">
+						<li className="hover:text-gray-400 text-white">
+							<a href="/app/course" className="text-white">Start</a>
+						</li>
+						<li className="hover:text-gray-400 text-white">Dokumentation</li>
+						<li className="hover:text-gray-400 text-white">Varför JobForge?</li>
+						<li className="hover:text-gray-400 text-white">
+							<a href="/app/review" className="text-white">Om oss</a>
+						</li>
+					</ul>
+				</div>
+			</footer>
+		</div>
 	);
-  }
+}
