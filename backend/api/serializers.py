@@ -10,7 +10,7 @@ from rest_framework.authtoken.models import Token
 class PersonalLetterCreatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = PersonalLetter
-        fields = ("id", "name", "age", "traits", "output")
+        fields = ("id", "name", "age", "traits", "programming_language", "employer_link", "output")
         extra_kwargs = {
             "output": {"read_only":True}
         }
@@ -23,6 +23,11 @@ class PersonalLetterCreatorSerializer(serializers.ModelSerializer):
         name = validated_data.get('name')
         age = validated_data.get('age')
         traits = validated_data.get('traits')
+        programming_language = validated_data.get('programming_language')
+        print(programming_language)
+        employer_link = validated_data.get('employer_link')
+        print(employer_link)
+
 
         output = send_prompt_to_api(name, age, traits)
         pl.output = output

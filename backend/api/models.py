@@ -6,9 +6,8 @@ class PersonalLetter(models.Model):
     name = models.TextField()
     age = models.TextField()
     traits = models.TextField()
-    # Väntar med dessa sålänge tills vi vet hur datan ser ut
-    # company = models.TextField()
-    # company_description = models.TextField()
+    programming_language = models.TextField(default="")
+    employer_link = models.TextField(default="")
     output = models.TextField()
 
     class Meta:

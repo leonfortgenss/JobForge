@@ -1,6 +1,12 @@
+
+
 const HistoricalData = () => {
     return (
-        <h1>Historical Data</h1>
+        <iframe
+        src="http://localhost:8501"
+        width={800}
+        height={600}
+    ></iframe>
     )
 };
 

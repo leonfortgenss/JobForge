@@ -13,6 +13,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
+import logo from '../assets/black-chatgpt-logo-circle-symbol-black-png-0.png'
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -148,31 +149,33 @@ export default function AppLayout({
 	children: React.ReactNode
   }) {
 	return (
-	  <>
-		<nav className="w-full">
-		  <Navigation />
+	  <div className="flex flex-col min-h-screen bg-gray-700 ">
+      <nav className="flex w-full items-center">
+        <img src={logo} alt="" className="w-16 h-10 ml-2" />
+		    <Navigation />
 		</nav>
 		<main>
 		  {children}
 		</main>
-		<footer className="mt-auto bottom-0 hidden md:flex flex-col w-full border-t-2 border-foreground/10 m">
+		<footer className="mt-auto bottom-0 hidden md:flex flex-col w-full bg-gray-700 border-t-2 border-foreground/10 ">
             <div className="flex justify-between p-6">
-                <p className="text-lg">JobForge &copy;</p>
-                <p className="text-lg">Förenklar ditt personliga brev</p>
+                <p className="text-lg text-white">JobForge &copy;</p>
+                <p className="text-lg text-white">Förenklar ditt personliga brev</p>
             </div>
            <div>
                 <ul className="flex justify-between px-6 pb-5">
-                    <li className="hover:text-foreground/60">
-                        <a href="/app/course">Start</a>
+                    <li className="hover:text-gray-400 text-white">
+                        <a href="/app/course text-white">Start</a>
                     </li>
-                    <li className="hover:text-foreground/60">Dokumentation</li>
-                    <li className="hover:text-foreground/60">Varför JobForge?</li>
-                    <li className="hover:text-foreground/60">
+                    <li className="hover:text-gray-400 text-white">Dokumentation</li>
+                    <li className="hover:text-gray-400 text-white">Varför JobForge?</li>
+                    <li className="hover:text-gray-400 text-white">
                         <a href="/app/review">Om oss</a>
                     </li>
                 </ul>
-           </div>
+           </div> 
         </footer>
-	  </>
+    </div>
+
 	);
   }
