@@ -20,6 +20,8 @@ class PersonalLetterCreatorSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         pl = PersonalLetter(**validated_data)
 
+        print('validated_data', validated_data.get('programmingLanguage'), validated_data.get('employerLink'))
+
         name = validated_data.get('name')
         age = validated_data.get('age')
         traits = validated_data.get('traits')

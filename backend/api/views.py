@@ -26,6 +26,7 @@ class LetterCreatorView(views.APIView):
     # Om man gör en post requst
     
     def post(self, request, format=None):
+        print('request data', request.data)
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
