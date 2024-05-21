@@ -1,5 +1,8 @@
 from openai import OpenAI
 import os
+import pandas as pd
+from collections import Counter
+from itertools import combinations
 
 # Egentligen ska api nyckeln ligga i en egen env fil så ingen kan nå den men aja
 api_key = 'sk-proj-yCkaJ8kfSuHR6BwuhBy5T3BlbkFJVDwRL8jVkCX8dPImE9BR'
@@ -22,3 +25,24 @@ def send_prompt_to_api(name, age, traits):
     last_message = response.choices[0].message.content
     print(last_message)
     return last_message
+
+
+def get_related_skills(programming_language):
+    input_skills = [language.strip().lower() for language in programming_language.split(',')]
+
+
+    df = pd.read_csv('skills.csv')
+    ignore_skills = {'svenska', 'engelska'}
+    all_skills = (df['skills'].dropna().str.lower().str.split(', ').apply(lambda skills: [skill.strip() for skill in skills if skill.strip()not in ignore_skills]))
+    related_skill_counts = Counter()
+
+    for skills_list in all_skills:
+        pairs = combinations(skills_list, 2)
+        for skill1, skill2 in pairs:
+            if skill1 in input_skills:
+                related_skill_counts[skill2] += 1
+            elif skill2 in input_skills:
+                related_skill_counts[skill1] += 1
+    
+    top_related_skills = [skill for skill, count in related_skill_counts.most_common(5)]
+    return top_related_skills
