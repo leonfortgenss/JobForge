@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from api.models import PersonalLetter
 from django.contrib.auth import authenticate
-from api.utils import send_prompt_to_api
+from api.utils import send_prompt_to_api, get_related_skills
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 
@@ -26,13 +26,14 @@ class PersonalLetterCreatorSerializer(serializers.ModelSerializer):
         age = validated_data.get('age')
         traits = validated_data.get('traits')
         programming_language = validated_data.get('programming_language')
-        print(programming_language)
         employer_link = validated_data.get('employer_link')
-        print(employer_link)
 
 
         output = send_prompt_to_api(name, age, traits)
+        job_matches = get_related_skills(programming_language)
+        print(job_matches)
         pl.output = output
+        pl.job_matches = job_matches
         pl.save()
         return pl
     
