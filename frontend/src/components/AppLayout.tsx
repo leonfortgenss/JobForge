@@ -13,45 +13,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
-import logo from '../assets/black-chatgpt-logo-circle-symbol-black-png-0.png'
-
-const components: { title: string; href: string; description: string }[] = [
-  {
-    title: "Alert Dialog",
-    href: "/docs/primitives/alert-dialog",
-    description:
-      "A modal dialog that interrupts the user with important content and expects a response.",
-  },
-  {
-    title: "Hover Card",
-    href: "/docs/primitives/hover-card",
-    description:
-      "For sighted users to preview content available behind a link.",
-  },
-  {
-    title: "Progress",
-    href: "/docs/primitives/progress",
-    description:
-      "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
-  },
-  {
-    title: "Scroll-area",
-    href: "/docs/primitives/scroll-area",
-    description: "Visually or semantically separates content.",
-  },
-  {
-    title: "Tabs",
-    href: "/docs/primitives/tabs",
-    description:
-      "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
-  },
-  {
-    title: "Tooltip",
-    href: "/docs/primitives/tooltip",
-    description:
-      "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
-  },
-]
+import png from '../assets/fullstack.png'
 
 function Navigation() {
   return (
@@ -67,7 +29,7 @@ function Navigation() {
                     className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                     href="/"
                   >
-                    {/* <Icons.logo className="h-6 w-6" /> */}
+                    <img src={png} alt="" className="w-30 h-30" />
                     <div className="mb-2 mt-4 text-lg font-medium">
                       JobForge
                     </div>
@@ -77,36 +39,20 @@ function Navigation() {
                   </a>
                 </NavigationMenuLink>
               </li>
-              <ListItem href="/docs" title="Smart AI">
+              <ListItem href="/home" title="Smart AI">
                 Specialiserad AI på just jobbannonser.
               </ListItem>
-              <ListItem href="/docs/installation" title="Relevant data">
+              <ListItem href="/home" title="Relevant data">
                 Baserad på historisk data.
               </ListItem>
-              <ListItem href="/docs/primitives/typography" title="Effektiv">
+              <ListItem href="/home" title="Effektiv">
                 Snabb och smidigt
               </ListItem> 
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuTrigger>Om oss</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-              {components.map((component) => (
-                <ListItem
-                  key={component.title}
-                  title={component.title}
-                  href={component.href}
-                >
-                  {component.description}
-                </ListItem>
-              ))}
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <a href="/docs" >
+          <a href="/home" >
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
               Dokumentation
             </NavigationMenuLink>
@@ -151,13 +97,12 @@ export default function AppLayout({
 	return (
 		<div className="flex flex-col min-h-screen">
 			<nav className="flex w-full items-center bg-gray-700">
-				<img src={logo} alt="JobForge Logo" className="w-16 h-10 ml-2" />
 				<Navigation />
 			</nav>
 			<main className="flex-grow bg-gray-600 w-full">
 				{children}
 			</main>
-			<footer className="mt-auto w-full bg-gray-700 border-t-2 border-foreground/10">
+			<footer className="mt-auto w-full bg-gray-700 border-t-2 border-foreground/10 ml-2">
 				<div className="flex justify-between p-6">
 					<p className="text-lg text-white">JobForge &copy;</p>
 					<p className="text-lg text-white">Förenklar ditt personliga brev</p>
