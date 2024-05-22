@@ -1,50 +1,60 @@
 from rest_framework import serializers
 from api.models import PersonalLetter
 from django.contrib.auth import authenticate
-from api.utils import send_prompt_to_api, get_related_skills
+from api.utils import send_prompt_to_api, get_related_skills, write_clear
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
+import requests
+from bs4 import BeautifulSoup
+from src.query_and_visualize import get_query_text, main as visualize_main
 
-# Man behöver i django serializa data/beareta datan för att den ska vara användful och synas.
+def scrape_job_listing(url):
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+        page_text = soup.get_text(separator='\n', strip=True)
+        markdown_text = f"```\n{page_text}\n```"
+        return {'page_text': markdown_text}
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching job listing: {e}")
+        return {'page_text': 'N/A'}
 
 class PersonalLetterCreatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = PersonalLetter
-        fields = ("id", "name", "age", "traits", "programming_language", "employer_link", "output")
+        fields = ("id", "name", "age", "traits", "programming_language", "employer_link", "skill_match", "output")
         extra_kwargs = {
-            "output": {"read_only":True}
+            "output": {"read_only": True}
         }
-
-# Gjorde om standard create functionen så den passar oss och här skickar den in datan till OpenAIs API och sedan sparar det.
 
     def create(self, validated_data):
         pl = PersonalLetter(**validated_data)
-
-        print('validated_data', validated_data.get('programmingLanguage'), validated_data.get('employerLink'))
 
         name = validated_data.get('name')
         age = validated_data.get('age')
         traits = validated_data.get('traits')
         programming_language = validated_data.get('programming_language')
         employer_link = validated_data.get('employer_link')
+        job_listing_details = scrape_job_listing(employer_link)
 
-
-        output = send_prompt_to_api(name, age, traits)
+        clean_text = write_clear(job_listing_details['page_text'])
+        output = send_prompt_to_api(name, age, traits, clean_text)
         job_matches = get_related_skills(programming_language)
-        print(job_matches)
+        print("job matches",job_matches)
+        
         pl.output = output
-        pl.job_matches = job_matches
+        pl.skill_match = job_matches
         pl.save()
+
         return pl
     
-# Basic user som kommer med django
-
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ("id", "username", "email", "password")
         extra_kwargs = {
-            "password": {"write_only":True}
+            "password": {"write_only": True}
         }
 
     def create(self, validated_data):
@@ -54,12 +64,8 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
 
-# Krypterar lösenord
-
         Token.objects.create(user=user)
         return user
-
-# För att få token får att få access till att kunna skriva promts authenticatar vi username och lösen och skickar tillbaka token
 
 class TokenSerializer(serializers.Serializer):
     username = serializers.CharField()

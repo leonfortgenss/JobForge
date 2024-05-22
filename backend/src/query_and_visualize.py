@@ -28,34 +28,34 @@ def load_chroma(embeddings):
     return db
 
 def run_query(query_text, db, k):
+    if query_text is None or query_text.strip() == "":
+        print("Query text is None or empty")
+        return []
     results = db.similarity_search_with_relevance_scores(query_text, k=k)
-    #threshold = 0.2
-    if len(results) == 0:# or results[0][1] < threshold:
+    if len(results) == 0:
         print("Unable to find matching results.")
         return []
     return results
 
-def get_query_text(path):
-    with open(path, "r") as file:
-        md_text = file.read()
-    return md_text
+def get_query_text(formatted_text):
+    return formatted_text
 
 def create_color_list(data_length, highlight_indices):
-    color_list = ['open job'] * data_length  # Initialize with 'blue'
+    color_list = ['open job'] * data_length
     for index in highlight_indices:
-        color_list[index] = 'matching job'  # Change color to 'red' at highlight indices
+        color_list[index] = 'matching job'
     return color_list
 
 def create_size_list(data_length, highlight_indices):
-    size_list = [0.2] * data_length  # Initialize with 'blue'
+    size_list = [0.2] * data_length
     for index in highlight_indices:
-        size_list[index] = 1  # Change color to 'red' at highlight indices
+        size_list[index] = 1
     return size_list
 
-def create_plotly_figure(data_dict, color_list, size_list = None):
+def create_plotly_figure(data_dict, color_list, size_list=None):
     color_discrete_map={'matching job': 'red', 'open job': 'light blue'}
     fig = px.scatter(data_dict, x='x', y='y', color=color_list, size=size_list,
-                     hover_data={'x': False,'y': False, 'name': True, 'employer': True, 'webpage': False, 'region': True},
+                     hover_data={'x': False, 'y': False, 'name': True, 'employer': True, 'webpage': False, 'region': True},
                      opacity=1,
                      color_discrete_map=color_discrete_map
                      )
@@ -65,75 +65,77 @@ def count_md_files(folder_path):
     return len([file for file in os.listdir(folder_path) if file.endswith('.md')])
 
 def main():
-    # Load embeddings and database
-    embeddings = load_embeddings()
-    db = load_chroma(embeddings)
-
-    # Get query text
-    query_path = "data/Workday Integration Analyst.md"
-    query_text = get_query_text(query_path)
-
-    # Run query
-    k = count_md_files("data/")
-    results = run_query(query_text, db, k)
-
-    # Display TSNE plot
     st.set_page_config(layout="wide")
-    st.subheader('Job Explorer')
+    st.subheader('Hitta liknande jobb')
 
-    X = np.array(db._collection.get(include=['embeddings'])['embeddings'])
-    data = np.array(db._collection.get(include=['metadatas'])['metadatas'])
-    employer = []
-    name = []
-    webpage = []
-    region = []
-    for d in data:
-        employer.append(d['employer'])
-        name.append(d['name'])
-        webpage.append(d['webpage'])
-        try:
-            region.append(d['region'])
-        except:
-            region.append('No Region')
+    # Initialize session state for query text
+    if 'query_text' not in st.session_state:
+        st.session_state.query_text = ""
 
-    #selected_region = st.sidebar.selectbox('Select Region', ['All'] + sorted(set(region)))
-    
-    X_2D = TSNE(n_components=2, learning_rate='auto', init='random', perplexity=3).fit_transform(X)
+    # User input for query text
+    query_text = st.text_input("Sök liknande jobb", value=st.session_state.query_text)
+    st.session_state.query_text = query_text
 
-    data_dict = {'x': X_2D[:,0],
-               'y': X_2D[:,1],
-               'employer': employer,
-               'name': name,
-               'webpage': webpage,
-               'region': region
-            }
-    n = 5
-    top_results = results[:n]  # Selecting only the top 5 results
-    #if selected_region != 'All':
-    #    relevant_results = [] 
-    #    for r in results:
-    #        if r[0].metadata['region'] == selected_region:
-    #            relevant_results.append(r)
-    #   top_results = relevant_results[n]
-    top_webpages = [result[0].metadata['webpage'] for result in top_results]  # Extracting webpages from top 5 results
-    highlight_indices = [data_dict['webpage'].index(webpage) for webpage in top_webpages]
-    color_list = create_color_list(len(data_dict['webpage']), highlight_indices)
-    size_list = create_size_list(len(data_dict['webpage']), highlight_indices)
-    fig = create_plotly_figure(data_dict, color_list)
-    #fig = create_plotly_figure(data_dict, color_list, size_list)
+    # Button to trigger query
+    if st.button("Sök"):
+        if query_text:
+            # Load embeddings and database
+            embeddings = load_embeddings()
+            db = load_chroma(embeddings)
 
-    col1, col2 = st.columns(2)
+            # Run query
+            k = count_md_files("data/")
+            results = run_query(get_query_text(query_text), db, k)
 
-    with col1:
-        st.plotly_chart(fig, use_container_width=True)
+            if len(results) == 0:
+                st.write("No results found for the given query.")
+                return
 
-    # Display top 5 answer items in the second column
-    with col2:
-        st.subheader("Top jobs for you:")
-        st.write("These jobs are similar to the one you are currently applying for:")
-        for i, result in enumerate(top_results):
-            st.write(f"**{result[0].metadata['name']}** at {result[0].metadata['employer']}: {result[0].metadata['webpage']}")
-            #st.write(f"Score: {result[1]}")
+            # Display TSNE plot
+            X = np.array(db._collection.get(include=['embeddings'])['embeddings'])
+            data = np.array(db._collection.get(include=['metadatas'])['metadatas'])
+            employer = []
+            name = []
+            webpage = []
+            region = []
+            for d in data:
+                employer.append(d['employer'])
+                name.append(d['name'])
+                webpage.append(d['webpage'])
+                try:
+                    region.append(d['region'])
+                except:
+                    region.append('No Region')
+
+            X_2D = TSNE(n_components=2, learning_rate='auto', init='random', perplexity=3).fit_transform(X)
+
+            data_dict = {'x': X_2D[:,0],
+                         'y': X_2D[:,1],
+                         'employer': employer,
+                         'name': name,
+                         'webpage': webpage,
+                         'region': region
+                         }
+            n = 5
+            top_results = results[:n]
+            top_webpages = [result[0].metadata['webpage'] for result in top_results]
+            highlight_indices = [data_dict['webpage'].index(webpage) for webpage in top_webpages]
+            color_list = create_color_list(len(data_dict['webpage']), highlight_indices)
+            size_list = create_size_list(len(data_dict['webpage']), highlight_indices)
+            fig = create_plotly_figure(data_dict, color_list, size_list)
+
+            col1, col2 = st.columns(2)
+
+            with col1:
+                st.plotly_chart(fig, use_container_width=True)
+
+            with col2:
+                st.subheader("Top jobs for you:")
+                st.write("These jobs are similar to the one you are currently applying for:")
+                for i, result in enumerate(top_results):
+                    st.write(f"**{result[0].metadata['name']}** at {result[0].metadata['employer']}: {result[0].metadata['webpage']}")
+        else:
+            st.write("Please enter a query text.")
 
 if __name__ == "__main__":
     main()

@@ -8,6 +8,7 @@ class PersonalLetter(models.Model):
     traits = models.TextField()
     programming_language = models.TextField(default="")
     employer_link = models.TextField(default="")
+    skill_match = models.JSONField(null=True, blank=True)
     output = models.TextField()
 
     class Meta:
