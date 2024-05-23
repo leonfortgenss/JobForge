@@ -13,7 +13,6 @@ interface FormData {
     employer_link: string;
 }
 
-// Helper function to capitalize words
 const capitalizeWords = (str: string) => {
     return str.replace(/\b\w/g, (char) => char.toUpperCase());
 };
@@ -29,7 +28,7 @@ const fetchLetters = async () => {
     const response = await fetch('http://127.0.0.1:8000/api/v1/application-creator/', {
         method: 'GET',
         headers: {
-            'Authorization': `Token ${token}`,  // Include token in headers
+            'Authorization': `Token ${token}`, 
             'Content-Type': 'application/json',
         },
     });
@@ -81,7 +80,7 @@ const Home: React.FC = () => {
             const response = await fetch('http://127.0.0.1:8000/api/v1/application-creator/', {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Token ${token}`,  // Include token in headers
+                    'Authorization': `Token ${token}`, 
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formData),
@@ -117,9 +116,9 @@ const Home: React.FC = () => {
 
     return (
         <main className="flex flex-col items-center min-h-screen bg-gray-600 text-white">
-            <div className="w-[90vw]">
+            <div className="w-[95vw]">
                 <section className="container mx-auto py-10 px-6 flex flex-wrap justify-center gap-10">
-                    <div className="flex flex-col w-full md:w-2/5 lg:w-1/3 gap-10">
+                    <div className="flex flex-col w-full md:w-1/2 lg:w-2/5 gap-10">
                         <Card className="bg-gray-800 rounded-lg overflow-hidden shadow-xl transition-shadow duration-300 hover:shadow-2xl h-[37rem]">
                             <CardHeader className="p-6 bg-gray-700 border-b border-gray-600">
                                 <CardTitle className="text-2xl font-bold text-white">Skapa Personligt Brev</CardTitle>
@@ -168,7 +167,7 @@ const Home: React.FC = () => {
                             </CardContent>
                         </Card>
                     </div>
-                    <Card className="w-full md:w-2/5 lg:w-1/3 bg-gray-800 rounded-lg overflow-hidden shadow-xl transition-shadow duration-300 hover:shadow-2xl">
+                    <Card className="w-full md:w-1/2 lg:w-2/5 bg-gray-800 rounded-lg overflow-hidden shadow-xl transition-shadow duration-300 hover:shadow-2xl">
                         <CardHeader className="p-6 bg-gray-700 border-b border-gray-600">
                             <CardTitle className="text-2xl font-bold text-white">Ditt Personliga Brev</CardTitle>
                             <CardDescription className="text-gray-400">Här kommer ditt personliga brev vara.</CardDescription>
@@ -189,7 +188,7 @@ const Home: React.FC = () => {
                 <section className="container mx-auto py-10 px-6 flex justify-center items-center">
                     <iframe
                         src="http://localhost:8501"
-                        className="w-[70%] h-[500px] border-none rounded-lg shadow-lg"
+                        className="w-[83%] h-[500px] border-none rounded-lg shadow-lg"
                         title="Job Explorer Dashboard"
                     ></iframe>
                 </section>
