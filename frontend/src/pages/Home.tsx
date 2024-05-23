@@ -9,13 +9,39 @@ interface FormData {
     name: string;
     age: string;
     traits: string;
-    programming_language: string,
+    programming_language: string;
     employer_link: string;
 }
 
 // Helper function to capitalize words
 const capitalizeWords = (str: string) => {
     return str.replace(/\b\w/g, (char) => char.toUpperCase());
+};
+
+const fetchLetters = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        throw new Error('User is not authenticated');
+    }
+
+    console.log("Token retrieved from localStorage:", token);
+
+    const response = await fetch('http://127.0.0.1:8000/api/v1/application-creator/', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Token ${token}`,  // Include token in headers
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if (!response.ok) {
+        if (response.status === 401) {
+            throw new Error('Unauthorized: You do not have permission to access this resource');
+        }
+        throw new Error('Error fetching your personal letter');
+    }
+    const responseData = await response.json();
+    return responseData.length > 0 ? responseData[responseData.length - 1] : null;
 };
 
 const Home: React.FC = () => {
@@ -34,35 +60,28 @@ const Home: React.FC = () => {
             ...prevState,
             [id]: value
         }));
-        console.log("formData", formData);
     };
 
     const queryClient = useQueryClient();
 
     const { data, error, isLoading, isError } = useQuery({
         queryKey: ['output', 'skill_match'],
-        queryFn: async () => {
-            const response = await fetch('http://127.0.0.1:8000/api/v1/application-creator/', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-            if (!response.ok) {
-                throw new Error('Error fetching your personal letter');
-            }
-            const responseData = await response.json(); 
-            console.log("Fetched data:", responseData);
-            // Return the latest entry
-            return responseData[responseData.length - 1];
-        },
+        queryFn: fetchLetters,
     });
 
     const mutation = useMutation({
         mutationFn: async (formData: FormData) => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('User is not authenticated');
+            }
+
+            console.log("Token retrieved from localStorage:", token);
+
             const response = await fetch('http://127.0.0.1:8000/api/v1/application-creator/', {
                 method: 'POST',
                 headers: {
+                    'Authorization': `Token ${token}`,  // Include token in headers
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formData),
@@ -71,7 +90,6 @@ const Home: React.FC = () => {
                 throw new Error('Error creating your personal letter');
             }
             const responseData = await response.json();
-            console.log("Mutation response data:", responseData);
             return responseData;
         },
         onSuccess: () => {
@@ -136,7 +154,7 @@ const Home: React.FC = () => {
                                 <CardDescription className="text-gray-400">Annat som är bra att kunna för dig</CardDescription>
                             </CardHeader>
                             <CardContent className="p-6">
-                                {data && data.skill_match && (
+                                {data && data.skill_match ? (
                                     <div className="my-5 p-4 bg-gray-800 border border-gray-600 rounded-md shadow-sm text-gray-200">
                                         <ul className="list-decimal list-inside">
                                             {data.skill_match.map((skill: string, index: number) => (
@@ -144,6 +162,8 @@ const Home: React.FC = () => {
                                             ))}
                                         </ul>
                                     </div>
+                                ) : (
+                                    <div className="text-gray-400">Inga data tillgängliga. Skapa en jobbansökan först.</div>
                                 )}
                             </CardContent>
                         </Card>
@@ -154,14 +174,14 @@ const Home: React.FC = () => {
                             <CardDescription className="text-gray-400">Här kommer ditt personliga brev vara.</CardDescription>
                         </CardHeader>
                         <CardContent className="p-6">
-                        {isLoading ? (
+                            {isLoading ? (
                                 <h1>Loading...</h1>
+                            ) : data && data.output ? (
+                                <div className="my-5 p-4 bg-gray-800 border border-gray-600 rounded-md shadow-sm text-gray-200">
+                                    {data.output}
+                                </div>
                             ) : (
-                                data && data.output && (
-                                    <div className="my-5 p-4 bg-gray-800 border border-gray-600 rounded-md shadow-sm text-gray-200">
-                                        {data.output}
-                                    </div>
-                                )
+                                <div className="text-gray-400">Inga data tillgängliga. Skapa en jobbansökan först.</div>
                             )}
                         </CardContent>
                     </Card>

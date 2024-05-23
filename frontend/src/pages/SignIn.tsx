@@ -20,11 +20,12 @@ import {
 interface UserData {
     username: string;
     password: string;
+    email?: string;
 }
 
 const SignInSignUp = () => {
     const [signInData, setSignInData] = useState<UserData>({ username: '', password: '' });
-    const [signUpData, setSignUpData] = useState<UserData>({ username: '', password: '' });
+    const [signUpData, setSignUpData] = useState<UserData>({ username: '', password: '', email: '' });
     const [error, setError] = useState<string>('');
 
     const signInMutation = useMutation({
@@ -43,8 +44,9 @@ const SignInSignUp = () => {
             return responseData;
         },
         onSuccess: (data) => {
-            const { access } = data;
-            localStorage.setItem('token', access);
+            const { token } = data;
+            console.log("Token received and stored:", token);
+            localStorage.setItem('token', token);
             window.location.href = '/home';
         },
         onError: () => {
@@ -68,8 +70,9 @@ const SignInSignUp = () => {
             return responseData;
         },
         onSuccess: (data) => {
-            const { access } = data;
-            localStorage.setItem('token', access);
+            const { token } = data;
+            console.log("Token received and stored:", token);
+            localStorage.setItem('token', token);
             window.location.href = '/home';
         },
         onError: () => {
@@ -160,6 +163,17 @@ const SignInSignUp = () => {
                                         type="text"
                                         name="username"
                                         value={signUpData.username}
+                                        onChange={handleSignUpChange}
+                                        required
+                                    />
+                                </div>
+                                <div className="space-y-2 mt-4">
+                                    <Label htmlFor="signup-email">Email</Label>
+                                    <Input
+                                        id="signup-email"
+                                        type="email"
+                                        name="email"
+                                        value={signUpData.email}
                                         onChange={handleSignUpChange}
                                         required
                                     />

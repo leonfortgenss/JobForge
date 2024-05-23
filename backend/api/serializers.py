@@ -23,13 +23,15 @@ def scrape_job_listing(url):
 class PersonalLetterCreatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = PersonalLetter
-        fields = ("id", "name", "age", "traits", "programming_language", "employer_link", "skill_match", "output")
+        fields = ("id", "user", "name", "age", "traits", "programming_language", "employer_link", "skill_match", "output")
         extra_kwargs = {
-            "output": {"read_only": True}
+            "output": {"read_only": True},
+            "user": {"read_only": True}, 
         }
 
     def create(self, validated_data):
-        pl = PersonalLetter(**validated_data)
+        user = self.context['request'].user
+        validated_data['user'] = user  # Explicitly set the user
 
         name = validated_data.get('name')
         age = validated_data.get('age')
@@ -41,15 +43,17 @@ class PersonalLetterCreatorSerializer(serializers.ModelSerializer):
         clean_text = write_clear(job_listing_details['page_text'])
         output = send_prompt_to_api(name, age, traits, clean_text)
         job_matches = get_related_skills(programming_language)
-        print("job matches",job_matches)
-        
-        pl.output = output
-        pl.skill_match = job_matches
-        pl.save()
+        print("job matches", job_matches)
 
+        validated_data['output'] = output
+        validated_data['skill_match'] = job_matches
+
+        pl = PersonalLetter.objects.create(**validated_data)  # Create the instance with the validated data
         return pl
     
 class UserSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(required=False)
+
     class Meta:
         model = User
         fields = ("id", "username", "email", "password")

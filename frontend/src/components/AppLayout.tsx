@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-
 import { cn } from "@/lib/utils"
 // import { Icons } from "@/components/icons"
 import {
@@ -16,9 +15,16 @@ import {
 import png from '../assets/fullstack.png'
 
 function Navigation() {
+  const handleSignOut = () => {
+    // Clear the token from localStorage
+    localStorage.removeItem('token');
+    // Redirect to the login page
+    window.location.href = '/';
+  };
+
   return (
-    <NavigationMenu className="p-4 shadow-xl w-full max-w-full">
-      <NavigationMenuList>
+    <NavigationMenu className="p-4 shadow-xl w-full max-w-full flex justify-between">
+      <NavigationMenuList className="flex">
         <NavigationMenuItem>
           <NavigationMenuTrigger>Starta här</NavigationMenuTrigger>
           <NavigationMenuContent>
@@ -57,6 +63,16 @@ function Navigation() {
               Dokumentation
             </NavigationMenuLink>
           </a>
+        </NavigationMenuItem>
+      </NavigationMenuList>
+      <NavigationMenuList className="flex">
+        <NavigationMenuItem>
+          <button
+            onClick={handleSignOut}
+            className="px-4 py-2 rounded-md text-white border-2 border-red-400 "
+          >
+            Logga ut
+          </button>
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
@@ -102,7 +118,7 @@ export default function AppLayout({
 			<main className="flex-grow bg-gray-600 w-full">
 				{children}
 			</main>
-			<footer className="mt-auto w-full bg-gray-700 border-t-2 border-foreground/10 ml-2">
+			<footer className="mt-auto w-full bg-gray-700 border-t-2 border-foreground/10 ">
 				<div className="flex justify-between p-6">
 					<p className="text-lg text-white">JobForge &copy;</p>
 					<p className="text-lg text-white">Förenklar ditt personliga brev</p>
