@@ -17,7 +17,7 @@ def write_clear(listing_information):
         messages=[
             {
                 "role": "user", "content": f"""Detta är text från en sida som innehåller en arbetsannons {listing_information}, 
-                skulle du kunne behålla endast det viktigaste och skriv ut ren infomration från denna. Om det går beskriv även arbetet lite mer. Du behöver inte skriva självklart eller någon anna typ av information utan endast den omskriva informationen"""
+                skulle du kunne behålla endast det viktigaste och skriv ut ren infomration från denna. Om det går beskriv även arbetet lite mer. Du behöver inte skriva självklart eller någon anna typ av information utan endast den omskriva informationen, det kan även komma in länkar som hem eller sociala medier men fokusera endast på arbets beskrivningen och ta bort allt annat"""
              }
         ]
     )

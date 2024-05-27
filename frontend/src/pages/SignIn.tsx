@@ -73,7 +73,7 @@ const SignInSignUp = () => {
             const { token } = data;
             console.log("Token received and stored:", token);
             localStorage.setItem('token', token);
-            window.location.href = '/home';
+            window.location.href = '/';
         },
         onError: () => {
             setError('Error signing up');

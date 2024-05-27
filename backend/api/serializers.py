@@ -39,8 +39,10 @@ class PersonalLetterCreatorSerializer(serializers.ModelSerializer):
         programming_language = validated_data.get('programming_language')
         employer_link = validated_data.get('employer_link')
         job_listing_details = scrape_job_listing(employer_link)
+        print('joblistingdetails', job_listing_details)
 
         clean_text = write_clear(job_listing_details['page_text'])
+        print('cleantext', clean_text)
         output = send_prompt_to_api(name, age, traits, clean_text)
         job_matches = get_related_skills(programming_language)
         print("job matches", job_matches)
