@@ -31,7 +31,7 @@ class PersonalLetterCreatorSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = self.context['request'].user
-        validated_data['user'] = user  # Explicitly set the user
+        validated_data['user'] = user 
 
         name = validated_data.get('name')
         age = validated_data.get('age')
@@ -50,7 +50,7 @@ class PersonalLetterCreatorSerializer(serializers.ModelSerializer):
         validated_data['output'] = output
         validated_data['skill_match'] = job_matches
 
-        pl = PersonalLetter.objects.create(**validated_data)  # Create the instance with the validated data
+        pl = PersonalLetter.objects.create(**validated_data)
         return pl
     
 class UserSerializer(serializers.ModelSerializer):

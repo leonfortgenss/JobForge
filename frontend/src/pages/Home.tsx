@@ -139,7 +139,8 @@ const Home: React.FC = () => {
                                     <Input id="programming_language" value={formData.programming_language} onChange={handleInputChange} placeholder="JavaScript, Python" className="mb-4 p-2 border border-gray-600 rounded-md w-full bg-gray-700 text-white" />
 
                                     <Label htmlFor="employer_link" className="block text-sm font-medium text-gray-300 mb-1">Länk till arbetsgivare:</Label>
-                                    <Input id="employer_link" value={formData.employer_link} onChange={handleInputChange} placeholder="https://volvo.se/soka_jobb" className="mb-4 p-2 border border-gray-600 rounded-md w-full bg-gray-700 text-white" />
+                                    <Input id="employer_link" value={formData.employer_link} onChange={handleInputChange} placeholder="https://volvo.se/soka_jobb" className="mb-1 p-2 border border-gray-600 rounded-md w-full bg-gray-700 text-white" />
+                                    <p className="text-xs text-white">Platsbanken tillåter inte webscraping skicka in arbetsgivarens länk</p>
                                     
                                     <Button type="submit" className="mt-4 w-full bg-gray-200 text-black py-2 rounded-md hover:bg-gray-400" disabled={isSubmitting}>
                                         {isSubmitting ? 'Skapar...' : 'Skapa'}
