@@ -9,8 +9,6 @@ from api.serializers import PersonalLetterCreatorSerializer, TokenSerializer, Us
 from api.models import PersonalLetter
 from rest_framework.permissions import AllowAny
 
-# Vad man ska få från varje endpoint
-
 class LetterCreatorView(views.APIView):
     serializer_class = PersonalLetterCreatorSerializer
     authentication_classes = [TokenAuthentication]
@@ -39,10 +37,6 @@ class UserView(views.APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request, format=None):
-        # Lite debugging som jag gjorde
-        print("Received Headers:", request.headers)  
-        print("Received Body:", request.body.decode('utf-8'))
-
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()

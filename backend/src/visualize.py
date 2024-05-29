@@ -15,7 +15,7 @@ from langchain_community.embeddings.sentence_transformer import (
 
 load_dotenv(override=True, verbose=True)
 
-CHROMA_PATH = os.environ.get('CHROMA_PATH', '')
+CHROMA_PATH = "chroma/"
 
 embs = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
 db = Chroma(persist_directory=CHROMA_PATH, embedding_function=embs)

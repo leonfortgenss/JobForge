@@ -17,7 +17,7 @@ import plotly.express as px
 
 load_dotenv(override=True, verbose=True)
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
-CHROMA_PATH = os.environ.get("CHROMA_PATH", "")
+CHROMA_PATH = "chroma/"
 
 def load_embeddings():
     embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
