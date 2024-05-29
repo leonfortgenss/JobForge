@@ -1,0 +1,13 @@
+[phases.setup]
+cmds = [
+  "pip install -r backend/requirements.txt"
+]
+
+[phases.build]
+cmds = [
+  "python backend/manage.py collectstatic --noinput",
+  "python backend/manage.py migrate"
+]
+
+[phases.start]
+cmd = "sh backend/start.sh"
